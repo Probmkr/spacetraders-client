@@ -59,7 +59,7 @@ class SpaceTradersBot:
         else:
             return "Command not found"
 
-    async def run(self):
+    async def async_run(self):
         raw = None
         while True:
             try:

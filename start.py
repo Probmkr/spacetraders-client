@@ -5,7 +5,7 @@ import asyncio
 
 
 async def main():
-    await bot.run()
+    await bot.async_run()
 
 
 asyncio.run(main())
