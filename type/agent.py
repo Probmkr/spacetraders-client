@@ -9,3 +9,7 @@ class AgentData(TypedDict):
     credits: int
     startingFaction: Faction
     shipCount: int
+
+
+class AgentResponse(TypedDict):
+    data: AgentData

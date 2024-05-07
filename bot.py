@@ -1,8 +1,13 @@
+from typing import TypedDict
 from env import LOG_LEVEL
 from type import *
 import aiohttp
 import logging
 import coloredlogs
+
+from type.agent import AgentResponse
+from type.literal import Faction
+from type.register import RegisterResponse
 
 
 class bcolors:
@@ -35,10 +40,10 @@ class SpaceTradersBot:
     baseurl: str
 
     def __init__(
-        self, token: str, endpoint: str = "https://api.spacetraders.io/v2"
+        self, token: str, baseurl: str = "https://api.spacetraders.io/v2"
     ) -> None:
         self.token = token
-        self.baseurl = endpoint
+        self.baseurl = baseurl
 
     def get_session(self) -> aiohttp.ClientSession:
         return aiohttp.ClientSession(
@@ -55,7 +60,22 @@ class SpaceTradersBot:
             }
         )
 
-    async def get_agent(self) -> agent.AgentData:
+    # none testing, just written
+    async def register(
+        symbol: str,
+        faction: Faction = "COSMIC",
+        baseurl: str = "https://api.spacetraders.io/v2",
+    ) -> RegisterResponse:
+        async with aiohttp.ClientSession() as session:
+            endpoint = f"{baseurl}/register"
+            logger.debug(f"POST {endpoint}")
+            async with session.post(
+                endpoint, json={"symbol": symbol, "faction": faction}
+            ) as response:
+                logger.debug(f"POST {endpoint} -> {response.status}")
+                return await response.json()
+
+    async def get_agent(self) -> AgentResponse:
         async with self.get_session() as session:
             endpoint = f"{self.baseurl}/my/agent"
             logger.debug(f"GET {endpoint}")
