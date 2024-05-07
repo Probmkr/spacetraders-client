@@ -75,7 +75,7 @@ class SpaceTradersBot:
                 logger.debug(f"POST {endpoint} -> {response.status}")
                 return await response.json()
 
-    async def get_agent(self) -> AgentResponse:
+    async def fetch_agent(self) -> AgentResponse:
         async with self.get_session() as session:
             endpoint = f"{self.baseurl}/my/agent"
             logger.debug(f"GET {endpoint}")

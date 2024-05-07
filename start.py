@@ -5,7 +5,7 @@ import asyncio
 
 async def main():
     bot = SpaceTradersBot(TOKEN)
-    agent = await bot.get_agent()
+    agent = await bot.fetch_agent()
     logger.debug(type(agent))
 
 
