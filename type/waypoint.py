@@ -1,6 +1,6 @@
 from typing import TypedDict
-from .literal import Faction
-from .alias import DateTimeString
+from type.literal import Faction
+from type.alias import DateTimeString
 
 
 class OrbitalData(TypedDict):

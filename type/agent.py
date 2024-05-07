@@ -1,5 +1,5 @@
 from typing import Literal, TypedDict
-from .literal import Faction
+from type.literal import Faction
 
 
 class AgentData(TypedDict):

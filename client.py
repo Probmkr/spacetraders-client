@@ -6,6 +6,7 @@ import logging
 import coloredlogs
 
 from type.agent import AgentResponse
+from type.contract import AcceptContractResponse, ContractResponse
 from type.literal import Faction
 from type.register import RegisterResponse
 
@@ -34,7 +35,7 @@ logger = logging.getLogger(__name__)
 coloredlogs.install(logger=logger, level=LOG_LEVEL)
 
 
-class SpaceTradersBot:
+class SpaceTradersClient:
     token: str
     symbol: str
     baseurl: str
@@ -81,4 +82,20 @@ class SpaceTradersBot:
             logger.debug(f"GET {endpoint}")
             async with session.get(endpoint) as response:
                 logger.debug(f"GET {endpoint} -> {response.status}")
+                return await response.json()
+
+    async def fetch_contracts(self) -> ContractResponse:
+        async with self.get_session() as session:
+            endpoint = f"{self.baseurl}/my/contracts"
+            logger.debug(f"GET {endpoint}")
+            async with session.get(endpoint) as response:
+                logger.debug(f"GET {endpoint} -> {response.status}")
+                return await response.json()
+
+    async def accept_contract(self, contract_id: str) -> AcceptContractResponse:
+        async with self.get_session() as session:
+            endpoint = f"{self.baseurl}/my/contracts/{contract_id}/accept"
+            logger.debug(f"POST {endpoint}")
+            async with session.post(endpoint) as response:
+                logger.debug(f"POST {endpoint} -> {response.status}")
                 return await response.json()
