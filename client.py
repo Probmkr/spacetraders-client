@@ -4,8 +4,9 @@ from type import *
 import aiohttp
 import logging
 import coloredlogs
+import asyncio
 
-from type.agent import AgentResponse
+from type.agent import AgentData, AgentResponse
 from type.contract import AcceptContractResponse, ContractResponse
 from type.literal import Faction
 from type.register import RegisterResponse
@@ -42,12 +43,14 @@ class SpaceTradersClient:
     token: str
     symbol: str
     baseurl: str
+    agent_data: AgentData
 
     def __init__(
         self, token: str, baseurl: str = "https://api.spacetraders.io/v2"
     ) -> None:
         self.token = token
         self.baseurl = baseurl
+        asyncio.run(self.fetch_agent())
 
     def get_session(self) -> aiohttp.ClientSession:
         return aiohttp.ClientSession(
@@ -85,7 +88,15 @@ class SpaceTradersClient:
             logger.debug(f"GET {endpoint}")
             async with session.get(endpoint) as response:
                 logger.debug(f"GET {endpoint} -> {response.status}")
-                return await response.json()
+                json = await response.json()
+                self.agent_data = json["data"]
+                return json
+
+    def get_agent_from_cache(self, key: str = "") -> AgentData:
+        if key in self.agent_data:
+            return self.agent_data[key]
+        else:
+            return self.agent_data
 
     async def fetch_contracts(self) -> ContractResponse:
         async with self.get_session() as session:

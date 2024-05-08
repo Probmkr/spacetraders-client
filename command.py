@@ -8,7 +8,7 @@ bot = SpaceTradersBot(TOKEN)
 
 
 def json_formatter(data):
-    return json.dumps(data, indent=4, sort_keys=True)
+    return json.dumps(data, indent=2, sort_keys=True)
 
 
 def get_system_from_waypoint(waypoint):
@@ -22,6 +22,12 @@ def symbols(multi_data):
 @bot.command()
 async def get_agent(client: SpaceTradersClient):
     agent = await client.fetch_agent()
+    print(json_formatter(agent))
+
+
+@bot.command()
+async def agent(client: SpaceTradersClient, key: str = ""):
+    agent = client.get_agent_from_cache(key)
     print(json_formatter(agent))
 
 
