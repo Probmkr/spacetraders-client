@@ -120,3 +120,19 @@ class SpaceTradersClient:
             async with session.get(endpoint) as response:
                 logger.debug(f"GET {endpoint} -> {response.status}")
                 return await response.json()
+
+    async def fetch_shipyard(self, system: str, waypoint: str):
+        async with self.get_session() as session:
+            endpoint = f"{self.baseurl}/systems/{system}/waypoints/{waypoint}/shipyard"
+            logger.debug(f"GET {endpoint}")
+            async with session.get(endpoint) as response:
+                logger.debug(f"GET {endpoint} -> {response.status}")
+                return await response.json()
+
+    async def fetch_ships(self):
+        async with self.get_session() as session:
+            endpoint = f"{self.baseurl}/my/ships"
+            logger.debug(f"GET {endpoint}")
+            async with session.get(endpoint) as response:
+                logger.debug(f"GET {endpoint} -> {response.status}")
+                return await response.json()
