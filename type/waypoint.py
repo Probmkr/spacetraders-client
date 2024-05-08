@@ -1,4 +1,5 @@
 from typing import TypedDict
+from type.common import MultiData
 from type.literal import Faction
 from type.alias import DateTimeString
 
@@ -38,3 +39,11 @@ class WayPointData(TypedDict):
     chart: ChartData
     faction: FactionData
     isUnderConstruction: bool
+
+
+class WayPointResponse(TypedDict):
+    data: WayPointData
+
+
+class WayPointsResponse(MultiData):
+    data: list[WayPointData]

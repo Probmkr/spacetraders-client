@@ -1,7 +1,7 @@
 from typing import TypedDict
 from type.agent import AgentData
 from type.alias import DateTimeString
-from type.common import MetaData
+from type.common import MetaData, MultiData
 from type.literal import Faction
 
 
@@ -34,9 +34,8 @@ class ContractData(TypedDict):
     deadlineToAccept: DateTimeString
 
 
-class ContractResponse(TypedDict):
+class ContractResponse(MultiData):
     data: ContractData
-    meta: MetaData
 
 
 class AcceptContractData(TypedDict):

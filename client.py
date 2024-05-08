@@ -9,6 +9,9 @@ from type.agent import AgentResponse
 from type.contract import AcceptContractResponse, ContractResponse
 from type.literal import Faction
 from type.register import RegisterResponse
+from urllib.parse import urlencode
+
+from type.waypoint import WayPointsResponse
 
 
 class bcolors:
@@ -98,4 +101,22 @@ class SpaceTradersClient:
             logger.debug(f"POST {endpoint}")
             async with session.post(endpoint) as response:
                 logger.debug(f"POST {endpoint} -> {response.status}")
+                return await response.json()
+
+    async def fetch_waypoint(self, system: str, waypoint: str):
+        async with self.get_session() as session:
+            endpoint = f"{self.baseurl}/systems/{system}/waypoints/{waypoint}"
+            logger.debug(f"GET {endpoint}")
+            async with session.get(endpoint) as response:
+                logger.debug(f"GET {endpoint} -> {response.status}")
+                return await response.json()
+
+    async def fetch_waypoints(
+        self, system: str, query: list[str] = []
+    ) -> WayPointsResponse:
+        async with self.get_session() as session:
+            endpoint = f"{self.baseurl}/systems/{system}/waypoints?{'&'.join(query) if query else ''}"
+            logger.debug(f"GET {endpoint}")
+            async with session.get(endpoint) as response:
+                logger.debug(f"GET {endpoint} -> {response.status}")
                 return await response.json()
