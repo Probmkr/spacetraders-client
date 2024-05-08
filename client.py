@@ -12,6 +12,7 @@ from type.literal import Faction
 from type.register import RegisterResponse
 from urllib.parse import urlencode
 
+from type.ship import BuyShipResponse
 from type.waypoint import WayPointsResponse
 
 
@@ -140,10 +141,29 @@ class SpaceTradersClient:
                 logger.debug(f"GET {endpoint} -> {response.status}")
                 return await response.json()
 
+    async def fetch_ship(self, symbol: str):
+        async with self.get_session() as session:
+            endpoint = f"{self.baseurl}/my/ships/{symbol}"
+            logger.debug(f"GET {endpoint}")
+            async with session.get(endpoint) as response:
+                logger.debug(f"GET {endpoint} -> {response.status}")
+                return await response.json()
+
     async def fetch_ships(self):
         async with self.get_session() as session:
             endpoint = f"{self.baseurl}/my/ships"
             logger.debug(f"GET {endpoint}")
             async with session.get(endpoint) as response:
                 logger.debug(f"GET {endpoint} -> {response.status}")
+                return await response.json()
+
+    async def buy_ship(self, ship_type: str, waypoint_symbol: str) -> BuyShipResponse:
+        async with self.get_session() as session:
+            endpoint = f"{self.baseurl}/my/ships"
+            logger.debug(f"POST {endpoint}")
+            async with session.post(
+                endpoint,
+                json={"shipType": ship_type, "waypointSymbol": waypoint_symbol},
+            ) as response:
+                logger.debug(f"POST {endpoint} -> {response.status}")
                 return await response.json()

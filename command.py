@@ -1,5 +1,5 @@
 from bot import SpaceTradersBot
-from client import SpaceTradersClient
+from client import SpaceTradersClient, logger
 from env import TOKEN
 import json
 
@@ -16,6 +16,8 @@ def get_system_from_waypoint(waypoint):
 
 
 def symbols(multi_data):
+    if ("error" in multi_data) or ("message" in multi_data):
+        return json_formatter(multi_data)
     return [data["symbol"] for data in multi_data["data"]]
 
 
@@ -87,6 +89,24 @@ async def get_shipyard(client: SpaceTradersClient, waypoint: str = ""):
 
 
 @bot.command()
+async def get_ship(client: SpaceTradersClient, symbol: str):
+    if not symbol:
+        print("Usage: get_ship <symbol>")
+        return
+    ship = await client.fetch_ship(symbol)
+    print(json_formatter(ship))
+
+
+@bot.command()
 async def get_ships(client: SpaceTradersClient):
     ships = await client.fetch_ships()
     print(symbols(ships))
+
+
+@bot.command()
+async def buy_ship(client: SpaceTradersClient, ship_type: str = "", waypoint: str = ""):
+    if not ship_type or not waypoint:
+        print("Usage: buy_ship <ship_type> <waypoint>")
+        return
+    ship = await client.buy_ship(ship_type, waypoint)
+    print(json_formatter(ship))
